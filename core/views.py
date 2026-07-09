@@ -68,7 +68,19 @@ def hospital_dashboard(request):
     return render(request, 'hospital_dashboard.html', {'requests': requests})
 
 @login_required
+@login_required
 def bloodbank_dashboard(request):
+    if request.method == 'POST':
+        blood_type = request.POST['blood_type']
+        units_available = request.POST['units_available']
+        expiry_date = request.POST['expiry_date']
+        Inventory.objects.create(
+            blood_bank=request.user,
+            blood_type=blood_type,
+            units_available=units_available,
+            expiry_date=expiry_date
+        )
+        messages.success(request, 'Inventory updated successfully!')
     incoming = BloodRequest.objects.filter(status='pending').order_by('-created_at')
     inventory = Inventory.objects.filter(blood_bank=request.user)
     return render(request, 'bloodbank_dashboard.html', {'incoming': incoming, 'inventory': inventory})

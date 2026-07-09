@@ -88,6 +88,28 @@
     <div class="col-md-5">
         <div class="card p-4">
             <h5 class="card-title mb-4">Your Inventory</h5>
+            <form method="POST" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Blood Type</label>
+        <select name="blood_type" class="form-control" required>
+            <option value="">Select</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option>
+            <option>AB+</option><option>AB-</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Units Available</label>
+        <input type="number" name="units_available" class="form-control" min="1" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Expiry Date</label>
+        <input type="date" name="expiry_date" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Add Inventory</button>
+</form>
             {% if inventory %}
                 {% for item in inventory %}
                 <div class="inventory-item">
