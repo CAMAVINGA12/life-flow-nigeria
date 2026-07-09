@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #0D1B2A, #1A1A2E);
+        border: 1px solid #2A2A4A;
+        border-radius: 16px;
+        padding: 32px;
+        margin-bottom: 32px;
+    }
+    .request-item {
+        background: #0F0F0F;
+        border: 1px solid #2A2A4A;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 12px;
+        transition: border-color 0.3s;
+    }
+    .request-item:hover {
+        border-color: #C1121F;
+    }
+    .blood-type-badge {
+        background: #C1121F;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="dashboard-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 style="font-family: 'Poppins'; font-weight: 700; margin: 0;">🏥 Hospital Dashboard</h2>
+            <p style="color: #A8B2C1; margin: 4px 0 0;">{{ user.username }} — {{ user.location }}</p>
+        </div>
+        <a href="/board/" class="btn btn-outline-light btn-sm">View Live Board</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h5 class="card-title mb-4">Post Blood Request</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Blood Type Needed</label>
+                    <select name="blood_type" class="form-control" required>
+                        <option value="">Select blood type</option>
+                        <option>A+</option><option>A-</option>
+                        <option>B+</option><option>B-</option>
+                        <option>O+</option><option>O-</option>
+                        <option>AB+</option><option>AB-</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Units Needed</label>
+                    <input type="number" name="units_needed" class="form-control" min="1" placeholder="e.g. 2" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Urgency Level</label>
+                    <select name="urgency" class="form-control" required>
+                        <option value="critical">🔴 Critical — Immediate need</option>
+                        <option value="moderate">🟡 Moderate — Within hours</option>
+                        <option value="low">🟢 Low — Within 24 hours</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" style="padding: 12px;">
+                    🩸 Post Blood Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h5 class="card-title mb-4">Your Active Requests</h5>
+            {% if requests %}
+                {% for req in requests %}
+                <div class="request-item">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="blood-type-badge">{{ req.blood_type }}</div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong style="color: #FFFFFF;">{{ req.units_needed }} units needed</strong>
+                                    <div class="mt-1">
+                                        <span class="badge badge-{{ req.urgency }} me-2">{{ req.urgency|upper }}</span>
+                                        <span class="badge badge-{{ req.status }}">{{ req.status|upper }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <small style="color: #A8B2C1;">{{ req.created_at|date:"M d, Y — H:i" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4">
+                    <div style="font-size: 48px;">📋</div>
+                    <p style="color: #A8B2C1; margin-top: 12px;">No requests posted yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

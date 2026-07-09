@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .login-card {
+        background: #1A1A2E;
+        border: 1px solid #2A2A4A;
+        border-radius: 16px;
+        padding: 40px;
+    }
+</style>
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-5">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <div style="font-size: 48px;">🩸</div>
+                <h3 style="font-family: 'Poppins'; font-weight: 700; color: #FFFFFF;">Welcome Back</h3>
+                <p style="color: #A8B2C1; font-size: 14px;">Login to your LifeFlow account</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-2" style="padding: 12px;">
+                    Login
+                </button>
+            </form>
+            <p class="text-center mt-4" style="color: #A8B2C1; font-size: 14px;">
+                No account? <a href="/register/" style="color: #E85D04;">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 style="font-family: 'Poppins'; color: #E85D04;">🩸 Donor Dashboard</h2>
+<p style="color: #A8B2C1;">Welcome, {{ user.username }} — Blood Group: {{ user.blood_group }}</p>
+
+<div class="card p-4 mt-3">
+    <h5 class="card-title">Active Blood Requests Near You</h5>
+    {% if active_requests %}
+        {% for req in active_requests %}
+        <div class="p-3 mb-2" style="background: #0F0F0F; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong style="color: #C1121F;">{{ req.blood_type }}</strong>
+                    — {{ req.units_needed }} units needed
+                    <span class="badge badge-{{ req.urgency }} ms-2">{{ req.urgency }}</span>
+                </div>
+                <span style="color: #A8B2C1;">{{ req.hospital.location }}</span>
+            </div>
+            <small style="color: #A8B2C1;">Posted by: {{ req.hospital.username }} — {{ req.created_at|date:"M d, Y H:i" }}</small>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #A8B2C1;">No active requests at the moment.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

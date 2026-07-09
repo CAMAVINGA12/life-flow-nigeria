@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .board-header {
+        background: linear-gradient(135deg, #3a0000, #0D1B2A);
+        border: 1px solid #C1121F;
+        border-radius: 16px;
+        padding: 32px;
+        margin-bottom: 32px;
+        text-align: center;
+    }
+    .live-dot {
+        width: 10px;
+        height: 10px;
+        background: #C1121F;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse 1s infinite;
+        margin-right: 8px;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+    .request-card {
+        background: #1A1A2E;
+        border: 1px solid #2A2A4A;
+        border-left: 4px solid #C1121F;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 16px;
+        transition: all 0.3s;
+    }
+    .request-card:hover {
+        border-color: #C1121F;
+        box-shadow: 0 4px 20px rgba(193, 18, 31, 0.2);
+        transform: translateY(-2px);
+    }
+    .request-card.critical {
+        border-left-color: #C1121F;
+    }
+    .request-card.moderate {
+        border-left-color: #F4A261;
+    }
+    .request-card.low {
+        border-left-color: #2D6A4F;
+    }
+    .blood-circle {
+        background: #C1121F;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="board-header">
+    <h2 style="font-family: 'Poppins'; font-weight: 700; font-size: 36px; margin: 0;">
+        <span class="live-dot"></span> Live Blood Request Board
+    </h2>
+    <p style="color: #A8B2C1; margin: 8px 0 0;">All active blood requests across Nigeria — refreshes every 30 seconds</p>
+</div>
+
+{% if active_requests %}
+    <div class="row mb-3">
+        <div class="col">
+            <p style="color: #A8B2C1;">
+                <strong style="color: #C1121F;">{{ active_requests|length }}</strong> active request{{ active_requests|length|pluralize }} right now
+            </p>
+        </div>
+    </div>
+
+    {% for req in active_requests %}
+    <div class="request-card {{ req.urgency }}">
+        <div class="d-flex align-items-center gap-4">
+            <div class="blood-circle">{{ req.blood_type }}</div>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h5 style="font-family: 'Poppins'; font-weight: 600; margin: 0; color: #FFFFFF;">
+                            {{ req.units_needed }} unit{{ req.units_needed|pluralize }} of {{ req.blood_type }} needed
+                        </h5>
+                        <p style="color: #A8B2C1; margin: 4px 0 0; font-size: 14px;">
+                            🏥 {{ req.hospital.username }} — 📍 {{ req.hospital.location }}
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge badge-{{ req.urgency }} fs-6 mb-2 d-block">{{ req.urgency|upper }}</span>
+                        <small style="color: #A8B2C1;">{{ req.created_at|date:"M d — H:i" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% else %}
+    <div class="text-center py-5">
+        <div style="font-size: 80px;">✅</div>
+        <h4 style="font-family: 'Poppins'; color: #2D6A4F; margin-top: 16px;">No Active Requests</h4>
+        <p style="color: #A8B2C1;">All blood needs are currently being met. Check back soon.</p>
+    </div>
+{% endif %}
+
+<script>
+    setTimeout(function(){ location.reload(); }, 30000);
+</script>
+
+{% endblock %}

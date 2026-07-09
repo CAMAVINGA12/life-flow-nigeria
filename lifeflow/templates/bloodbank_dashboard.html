@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #0D1B2A, #1A1A2E);
+        border: 1px solid #2A2A4A;
+        border-radius: 16px;
+        padding: 32px;
+        margin-bottom: 32px;
+    }
+    .request-item {
+        background: #0F0F0F;
+        border: 1px solid #2A2A4A;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 12px;
+        transition: border-color 0.3s;
+    }
+    .request-item:hover { border-color: #E85D04; }
+    .blood-type-badge {
+        background: #C1121F;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .inventory-item {
+        background: #0F0F0F;
+        border: 1px solid #2A2A4A;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+
+<div class="dashboard-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 style="font-family: 'Poppins'; font-weight: 700; margin: 0;">🏦 Blood Bank Dashboard</h2>
+            <p style="color: #A8B2C1; margin: 4px 0 0;">{{ user.username }} — {{ user.location }}</p>
+        </div>
+        <a href="/board/" class="btn btn-outline-light btn-sm">View Live Board</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h5 class="card-title mb-4">Incoming Requests</h5>
+            {% if incoming %}
+                {% for req in incoming %}
+                <div class="request-item">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="blood-type-badge">{{ req.blood_type }}</div>
+                        <div class="flex-grow-1">
+                            <strong style="color: #FFFFFF;">{{ req.units_needed }} units needed</strong>
+                            <div class="mt-1">
+                                <span class="badge badge-{{ req.urgency }} me-2">{{ req.urgency|upper }}</span>
+                            </div>
+                            <small style="color: #A8B2C1;">From: {{ req.hospital.username }} — {{ req.hospital.location }}</small>
+                        </div>
+                        <a href="/fulfill/{{ req.id }}/" class="btn btn-primary btn-sm">
+                            Fulfill
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4">
+                    <div style="font-size: 48px;">✅</div>
+                    <p style="color: #A8B2C1; margin-top: 12px;">No incoming requests right now.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h5 class="card-title mb-4">Your Inventory</h5>
+            {% if inventory %}
+                {% for item in inventory %}
+                <div class="inventory-item">
+                    <div>
+                        <strong style="color: #C1121F; font-size: 18px;">{{ item.blood_type }}</strong>
+                        <div style="color: #A8B2C1; font-size: 13px;">Expires: {{ item.expiry_date }}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong style="color: #FFFFFF;">{{ item.units_available }}</strong>
+                        <div style="color: #A8B2C1; font-size: 13px;">units</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4">
+                    <div style="font-size: 48px;">📦</div>
+                    <p style="color: #A8B2C1; margin-top: 12px;">No inventory added yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
