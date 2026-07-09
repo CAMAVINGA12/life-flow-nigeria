@@ -15,7 +15,12 @@
                     — {{ req.units_needed }} units needed
                     <span class="badge badge-{{ req.urgency }} ms-2">{{ req.urgency }}</span>
                 </div>
-                <span style="color: #A8B2C1;">{{ req.hospital.location }}</span>
+                <div>
+    <span style="color: #A8B2C1;">{{ req.hospital.location }}</span>
+    {% if user.blood_group == req.blood_type %}
+    <a href="/donor-respond/{{ req.id }}/" class="btn btn-primary btn-sm ms-2">I Can Donate 🩸</a>
+    {% endif %}
+</div>
             </div>
             <small style="color: #A8B2C1;">Posted by: {{ req.hospital.username }} — {{ req.created_at|date:"M d, Y H:i" }}</small>
         </div>

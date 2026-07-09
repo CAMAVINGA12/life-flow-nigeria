@@ -13,3 +13,4 @@ urlpatterns = [
     path('board/', views.request_board, name='request_board'),
     path('fulfill/<int:request_id>/', views.fulfill_request, name='fulfill_request'),
 ]
+path('donor-respond/<int:request_id>/', views.donor_respond, name='donor_respond'),

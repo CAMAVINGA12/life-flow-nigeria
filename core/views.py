@@ -88,3 +88,10 @@ def donor_dashboard(request):
 def request_board(request):
     active_requests = BloodRequest.objects.filter(status='pending').order_by('-created_at')
     return render(request, 'request_board.html', {'active_requests': active_requests})
+@login_required
+def donor_respond(request, request_id):
+    blood_request = BloodRequest.objects.get(id=request_id)
+    blood_request.status = 'matched'
+    blood_request.save()
+    messages.success(request, 'Thank you! The hospital has been notified of your availability.')
+    return redirect('donor_dashboard')
