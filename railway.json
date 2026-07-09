@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "gunicorn lifeflow.wsgi:application",
+    "startCommand": "gunicorn lifeflow.wsgi:application --bind 0.0.0.0:$PORT",
     "restartPolicyType": "ON_FAILURE"
   }
 }
